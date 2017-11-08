@@ -1,0 +1,55 @@
+{% extends "base.html" %}
+{% load staticfiles %}
+{% block content %}
+<style type="text/css">
+    .view
+    {
+        background: url("{% static 'img/background.jpg' %}")no-repeat center center fixed;
+        -webkit-background-size: cover;
+        -moz-background-size: cover;
+        -o-background-size: cover;
+        background-size: cover;
+        /*filter: grayscale(50%);
+        filter: blur(3px);*/
+    }
+</style>
+<div class="view hm-black-strong">
+    <div class="full-bg-img flex-center">
+        <ul>
+            <li class="wow fadeInDown mb-4" data-wow-delay="0.6s">
+                <h1 class="default-color-dark-text mr-5 ml-5 container">
+                    <i>
+                        Todos somos muy ignorantes, lo que ocurre es que no todos ignoramos las mismas cosas...
+                    </i>
+                    <h2>Albert Einstain</h2>
+                </h1>
+            </li>
+            <li>
+                <a class="btn default-color-dark btn-lg wow fadeInLeftBig"
+                   data-wow-delay="0.6s"
+                   rel="nofollow"
+                   href="{% url 'register' %}">
+                   Inscríbete
+                </a>
+                <a target=""
+                   href="{% url 'presential' %}"
+                   class="btn default-color btn-lg wow fadeInRightBig" data-wow-delay="0.6s"
+                   rel="nofollow">
+                    Asistencia
+                </a>
+            </li>
+            <li>
+                <h3 class="grey-text text-lighten-5 h3-responsive wow fadeInUpBig"
+                    data-wow-delay="0.6s">
+                    Modulo Herramientas Informaticas
+                </h3>
+            </li>
+        </ul>
+    </div>
+</div>
+{% endblock%}
+{% block JavaScript %}
+<script type="text/javascript">
+    $(".nav-init").addClass('active');
+</script>
+{% endblock %}

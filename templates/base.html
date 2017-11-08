@@ -1,0 +1,181 @@
+{% load staticfiles %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+
+    <title>Herramientas Informaticas</title>
+
+    <link rel="stylesheet" href="{% static 'css/bootstrap.css' %}">
+    <link rel="stylesheet" href="{% static 'css/mdb.css' %}">
+    <link rel="stylesheet" href="{% static 'font-awesome/css/font-awesome.css' %}">
+    <link rel="stylesheet" href="{% static 'bootstrap-select/css/bootstrap-select.css' %}">
+    <link rel="stylesheet" href="{% static 'css/checkbox.css' %}">
+    <link rel="stylesheet" href="{% static 'css/select-style.css' %}">
+    <style>
+
+        html,
+        body,
+        .view
+        {
+            height: 100%;
+        }
+        body
+        {
+            font-family: "Roboto", sans-serif;
+        }
+        .navbar
+        {
+            background-color: transparent;
+        }
+
+        a
+        {
+            text-align: center;
+        }
+
+        .scrolling-navbar
+        {
+            -webkit-transition: background .5s ease-in-out, padding .5s ease-in-out;
+            -moz-transition: background .5s ease-in-out, padding .5s ease-in-out;
+            transition: background .5s ease-in-out, padding .5s ease-in-out;
+        }
+
+        .top-nav-collapse
+        {
+            /*background-color: #263238;*/
+            background-color: rgb(38,50,56, 0.9);
+        }
+
+        footer.page-footer
+        {
+            background-color: #2E2E2E;
+            margin-top: 0;
+            padding-top: 0;
+        }
+
+        @media only screen and (max-width: 768px)
+        {
+            .navbar
+            {
+                background-color: #263238;
+            }
+        }
+        /*Call to action*/
+
+        .flex-center
+        {
+            color: #fff;
+        }
+
+        .contacts .fa
+        {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            color: #1C2331;
+        }
+
+        li .fa
+        {
+            color: #e0f2f1;
+        }
+    </style>
+</head>
+
+<body>
+    <nav class="navbar navbar-toggleable-md navbar-dark fixed-top scrolling-navbar">
+        <div class="container">
+            <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#mainNavBar" aria-controls="mainNavBar" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <a class="navbar-brand" href="{% url 'inicio' %}">
+                <strong>Herramientas<br>Informaticas</strong>
+            </a>
+            <div class="collapse navbar-collapse" id="mainNavBar">
+                <ul class="navbar-nav mr-auto">
+                    <li class="nav-item nav-init">
+                        <a class="nav-link"
+                           href="{% url 'inicio' %}">
+                            <i class="fa fa-heart"></i><br>
+                            Inicio
+                        </a>
+                    </li>
+                    <li class="nav-item nav-regi">
+                        <a class="nav-link" href="{% url 'register' %}">
+                            <i class="fa fa-users"></i><br>
+                            Registrarse
+                        </a>
+                    </li>
+                    <li class="nav-item nav-asis">
+                        <a class="nav-link" href="{% url 'presential' %}">
+                            <i class="fa fa-address-book"></i><br>
+                            Asistencia
+                        </a>
+                    </li>
+                </ul>
+
+                <ul class="navbar-nav nav-flex-icons">
+                    <li class="nav-item">
+                        <a class="nav-link"><i class="fa fa-facebook fa-2x"></i></a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link"><i class="fa fa-twitter fa-2x"></i></a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link"><i class="fa fa-instagram fa-2x"></i></a>
+                    </li>
+                </ul>
+                <!-- <form class="form-inline waves-effect waves-light">
+                    <input class="form-control" type="text" placeholder="Buscar">
+                </form> -->
+            </div>
+        </div>
+    </nav>
+    {% block content %}{% endblock %}
+    <footer class="page-footer center-on-small-only">
+        <div class="call-to-action">
+            <br><br>
+            <h4 class="light">Herramientas Informaticas</h4>
+            <ul>
+                <li>
+                    <a class="btn default-color-dark btn-lg wow fadeInLeft"
+                       data-wow-delay="0.2s"
+                       rel="nofollow"
+                       data-toggle="modal"
+                       data-target="#modalRegister">
+                       Inscríbete
+                    </a>
+                </li>
+                <li>
+                    <a target=""
+                       href="{% url 'presential' %}"
+                       class="btn default-color btn-lg wow fadeInRight"
+                       data-wow-delay="0.2s" rel="nofollow">
+                        Asistencia
+                    </a>
+                </li>
+            </ul>
+        </div>
+        <hr>
+        <div class="footer-copyright">
+            <div class="container-fluid">
+                <a>© 2017 Smart Emotions</a> By Carlos Hernan Guadir Aza
+            </div>
+        </div>
+    </footer>
+    <script type="text/javascript" src="{% static 'js/jquery.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/tether.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/bootstrap.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/mdb.js' %}"></script>
+    <script type="text/javascript" src="{% static 'bootstrap-select/js/bootstrap-select.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/validate.js' %}"></script>
+    <script>
+        new WOW().init();
+    </script>
+    {% block JavaScript %}{% endblock %}
+</body>
+</html>

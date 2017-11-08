@@ -1,0 +1,313 @@
+{% extends "base.html" %}
+{% load staticfiles %}
+{% block content %}
+<style media="screen">
+    .navbar
+    {
+        background-color: #263238;
+    }
+    div.error
+    {
+        position: relative;
+        top: -1rem;
+        left: 0rem;
+        font-size: 0.8rem;
+        color:#FF8800;
+        -webkit-transform: translateY(0%);
+        -ms-transform: translateY(0%);
+        -o-transform: translateY(0%);
+        transform: translateY(0%);
+    }
+    #name, #lastname
+    {
+        text-transform: capitalize !important;
+    }
+    .register-student
+    {
+        height: 100%;
+        background: url("{% static 'img/background.jpg' %}")no-repeat center center fixed;
+        -webkit-background-size: cover;
+        -moz-background-size: cover;
+        -o-background-size: cover;
+        background-size: cover;
+    }
+</style>
+<div class="container-fluid register-student">
+    <div class="row mt-5">
+        <div class="col-lg-6">
+            <div class="modal-dialog cascading-modal wow fadeInLeft"
+                 role="document"
+                 data-wow-delay="0.6s">
+                <div class="modal-content">
+                    <div class="modal-header default-color-dark white-text">
+                        <i class="fa fa-user fa-4x"></i>
+                        <h4 class="title">
+                            Registrar Mi Asistencia
+                        </h4>
+                    </div>
+                    <div class="modal-body mb-0">
+                        <h5 class="text-center mb-2">
+                            Envia tu codigo estudiantil para registrar asistencia a clases.
+                        </h5>
+                        <form id="register-presential" method="POST">
+                            {% csrf_token %}
+                            <div class="md-form form-sm"
+                                 id="code">
+                                 <i class="fa fa-key prefix"></i>
+                                 <input type="text"
+                                        id="code"
+                                        name="code"
+                                        class="form-control"
+                                        data-error=".errorCode">
+                                 <label for="errorCode">Su Codigo Estudiantil</label>
+                                 <div class="errorCode text-center"></div>
+                            </div>
+                            <div class="text-center mt-1-half btn-presential">
+                                <button type="submit"
+                                        name="button"
+                                        class="btn default-color-dark btn-lg">
+                                    Registrar Mi Asistencia
+                                    <i class="fa fa-send ml-1"></i>
+                                </button>
+                            </div>
+                        </form>
+                        <div class="feedBack">
+                            <h5 class="mt-3 text-center wow infinite bounce" data-wow-delay="2.0s" data-wow-duration='6.0s'>
+                                La memoria es la inteligencia de los tontos <br><i> Albert Einstein </i>
+                            </h5>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-6 mt-2">
+            <div class="card text-center">
+                <div class="card-body">
+                    <h2 class="card-title green-text text-darken-4 mt-3 mb-2">
+                        Asistencia Clases Presenciales
+                    </h2>
+                    <canvas id="presentials-chart"
+                            class="wow fadeIn" data-wow-delay="0.6s">
+                    </canvas>
+                    <div class="text-right mt-1 mr-2">
+                        <a href="javascript:getPresentials()" class="btn default-color-dark btn-sm">
+                            Actualizar Grafico
+                            <i class="fa fa-refresh ml-2"></i>
+                        </a>
+                        <a id="saveimage-btn" class="btn default-color-dark btn-sm">
+                            Descargar
+                            <i class="fa fa-download fa-2x ml-2"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+{% block JavaScript %}
+<script type="text/javascript" src="{% static 'js/chart.js' %}"></script>
+<script type="text/javascript" src="{% static 'js/fileSaver.js' %}"></script>
+    <script type="text/javascript">
+    $(".nav-asis").addClass('active');
+    $("#register-presential").validate({
+        rules:
+        {
+            code:
+            {
+                required: true,
+                number: true,
+                minlength: 9
+            },
+        },
+        messages:
+        {
+            code:
+            {
+                required: 'Digite Su Codigo Estudiantil',
+                number: 'Digite Un Codigo Valido',
+                minlength: 'Digite Codigo Completo'
+            },
+        },
+        errorElement : 'div',
+        errorPlacement: function(error, element)
+        {
+            var placement = $(element).data('error');
+            if (placement)
+            {
+                $(placement).append(error)
+            }
+            else
+            {
+                error.insertAfter(element);
+                $('#feedBackLogin').empty();
+            }
+        },
+        submitHandler: function(form)
+        {
+            button ='<i class="fa fa-spinner fa-pulse fa-fw fa-3x special-color-dark-text mt-1-half"></i>'+
+                      '<span class="sr-only">Loading...</span>';
+            $('.btn-presential').html(button);
+            $.ajax({
+                url: "{% url 'save-presential' %}",
+                type: "POST",
+                data : $("#register-presential").serialize(),
+                dataType: 'html',
+                success : function(datos)
+                {
+                    button ='<button type="submit"' +
+                                'name="button"' +
+                                'class="btn default-color-dark btn-lg">' +
+                            'Registrar Mi Asistencia' +
+                            '<i class="fa fa-send ml-1"></i>' +
+                        '</button>';
+                    $('.btn-presential').html(button);
+                    if (datos)
+                    {
+                        var html = '';
+                        if (datos==0)
+                        {
+                            html = '<div class="row">' +
+                                    '<div class="col-lg-12 center-align">' +
+                                        '<h3 class="text-center mb-1 wow fadeIn"' + 'data-wow-delay="0.6s">Gracias Por Asistir</h3>' +
+                                        '<div class="text-center mt-1-half">' +
+                                            '<i class="green-text mb-1 fa fa-check-circle-o fa-4x wow bounceIn" data-wow-delay="0.6s"></i>' +
+                                        "</div>" +
+                                        '<h4 class="section-description mb-1 wow fadeIn text-center"' +
+                                            'data-wow-delay="0.6s">' +
+                                            'Nosotros, los mortales, logramos la inmortalidad en las cosas que creamos en común y que quedan después de nosotros.  <i> - Albert Einstein</i>' +
+                                        '</h4>' +
+                                        '<div class="text-center mt-1-half mb-1">' +
+                                            '<a target=""' +
+                                               "href='{% url 'inicio' %}'" +
+                                               'class="btn default-color-dark btn-lg wow fadeInUp"' + 'data-wow-delay="0.6s"' +
+                                               'rel="nofollow">' +
+                                                'Ir Al Inicio' +
+                                            '</a>' +
+                                        "</div>" +
+                                    '</div>' +
+                                '</div>';
+                            $(".title").text('');
+                            $(".modal-body").html(html);
+                            getPresentials();
+                        }
+                        else if (datos==1)
+                        {
+                            html = '<div class="row">' +
+                                '<div class="col-lg-12 center-align">' +
+                                    '<div class="text-center mt-1">' +
+                                        '<i class="orange-text mb-1 fa fa-ban fa-4x wow bounceIn" data-wow-delay="0.6s"></i>' +
+                                    "</div>" +
+                                    '<h5 class="section-description mb-1 wow fadeIn text-center"' +
+                                        'data-wow-delay="0.6s">' +
+                                        'Su asistencia a la clase de hoy ya se encuentra registrada.' +
+                                    '</h5>' +
+                                '</div>' +
+                            '</div>';
+                            $(".feedBack").html(html);
+                        }
+                        else if (datos == 2)
+                        {
+                            html = '<div class="row">' +
+                                '<div class="col-lg-12 center-align">' +
+                                    '<div class="text-center mt-1">' +
+                                        '<i class="orange-text mb-1 fa fa-ban fa-4x wow bounceIn" data-wow-delay="0.6s"></i>' +
+                                    "</div>" +
+                                    '<h5 class="section-description mb-1 wow fadeIn text-center"' +
+                                        'data-wow-delay="0.6s">' +
+                                        'El codigo digitado no se encuentra registrado, puedes ' +
+                                        '<a class="blue-text text-darken-1 wow fadeIn" data-wow-delay="1.0s"' +
+                                           "href='{% url 'register' %}'>" +
+                                           'registrarlo aqui ' +
+                                           '<i class="mr-2 fa fa-arrow-circle-right"></i>' +
+                                        '</a>' +
+                                    '</h5>' +
+                                '</div>' +
+                            '</div>';
+                            $(".feedBack").html(html);
+                        }
+                    }
+                },
+                error : function(xhr,errmsg,err)
+                {
+                }
+            });
+        }
+    });
+
+    $("#saveimage-btn").click(function()
+    {
+    	$("#presentials-chart").get(0).toBlob(function(blob)
+        {
+    		saveAs(blob, "Asistencia-Estudiantes.png");
+    	});
+    });
+
+    getPresentials();
+    function getPresentials()
+    {
+        $.ajax({
+            url: "{% url 'get-presentials' %}",
+            type: "POST",
+            data : { csrfmiddlewaretoken: '{{ csrf_token }}'},
+            dataType: 'html',
+            success : function(datos)
+            {
+                datos = JSON.parse(datos);
+                var labels = []
+                var data = []
+                for (let i = 0; i < datos.length; i++)
+                {
+                    labels.push(datos[i].day)
+                    data.push(datos[i].available)
+                }
+                (function() {
+                    var ctx = document.getElementById('presentials-chart').getContext('2d');
+                    var chart = new Chart(ctx, {
+                        type: 'bar',
+                        options:
+                        {
+                            scales:
+                            {
+                                xAxes:
+                                [{
+                                    display: true,
+                                    // ticks:
+                                    // {
+                                    //     autoSkip: false,
+                                    //     maxRotation: 90,
+                                    //     minRotation: 90
+                                    // }
+                                }],
+                                yAxes:
+                                [{
+                                    ticks:{
+                                        stepSize : 1,
+                                        beginAtZero:true
+                                    },
+                                    stacked: false,
+                                    min: 0,
+                                    display: true
+                                }]
+                            }
+                        },
+                        data:
+                        {
+                            labels: labels,
+                            datasets:
+                            [{
+                                label: 'Numero Asistentes',
+                                data: data,
+                                backgroundColor: "rgba(0, 150, 136, 0.7)"
+                            }]
+                        }
+                    });
+                })();
+            },
+            error : function(xhr,errmsg,err)
+            {
+            }
+        });
+    }
+    </Script>
+{% endblock%}

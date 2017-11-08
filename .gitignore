@@ -1,0 +1,10 @@
+*.pyc
+*.sqlite3
+*.png
+*.jpg
+*.eot
+*.ttf
+*.woff
+*.woff2
+*.otf
+*.less
